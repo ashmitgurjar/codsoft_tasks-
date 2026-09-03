@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineGenre AI | Movie Genre Classification Engine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="glow-bg"></div>
+
+    <!-- Header Navigation -->
+    <header class="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <i class="fa-solid fa-film logo-icon"></i>
+                <span class="logo-text">CineGenre<span class="highlight">.AI</span></span>
+            </div>
+            <nav class="nav-links">
+                <a href="#predictor" class="active"><i class="fa-solid fa-wand-magic-sparkles"></i> Predictor</a>
+                <a href="#samples"><i class="fa-solid fa-clapperboard"></i> Sample Plots</a>
+                <a href="#benchmarks"><i class="fa-solid fa-chart-line"></i> Model Performance</a>
+                <a href="#keywords"><i class="fa-solid fa-tags"></i> Top Keywords</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Hero Container -->
+    <main class="container main-content">
+        <section class="hero-section">
+            <div class="badge"><i class="fa-solid fa-brain"></i> Machine Learning Classifier</div>
+            <h1 class="hero-title">Movie Genre Classification <span class="gradient-text">Engine</span></h1>
+            <p class="hero-subtitle">
+                Predict movie genres instantly from plot summaries using <strong>TF-IDF Vectorization</strong> combined with 
+                <strong>Multinomial Naive Bayes</strong>, <strong>Logistic Regression</strong>, <strong>Support Vector Machines</strong>, and <strong>Ensemble Models</strong>.
+            </p>
+        </section>
+
+        <!-- Main Interactive Workspace Grid -->
+        <div class="workspace-grid" id="predictor">
+            <!-- Left Card: Input Plot Textarea -->
+            <div class="card input-card">
+                <div class="card-header">
+                    <h2><i class="fa-solid fa-align-left"></i> Movie Plot Summary</h2>
+                    <span class="word-counter" id="wordCount">0 words</span>
+                </div>
+                <div class="card-body">
+                    <div class="model-select-group">
+                        <label for="modelSelect"><i class="fa-solid fa-sliders"></i> Classification Model:</label>
+                        <select id="modelSelect" class="styled-select">
+                            <option value="Logistic Regression" selected>Logistic Regression (Recommended)</option>
+                            <option value="Support Vector Machine">Support Vector Machine (LinearSVC)</option>
+                            <option value="Naive Bayes">Multinomial Naive Bayes</option>
+                            <option value="Random Forest">Random Forest Classifier</option>
+                            <option value="Ensemble">Multi-Model Ensemble Vote</option>
+                        </select>
+                    </div>
+
+                    <textarea id="plotInput" placeholder="Paste or type a movie plot summary here... (e.g., A group of astronauts embark on a space journey through a wormhole near Saturn to save humanity from extinction.)" rows="7"></textarea>
+
+                    <div class="action-bar">
+                        <button id="clearBtn" class="btn btn-secondary"><i class="fa-solid fa-trash-can"></i> Clear</button>
+                        <button id="predictBtn" class="btn btn-primary"><i class="fa-solid fa-bolt"></i> Classify Genre</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Card: Prediction Results -->
+            <div class="card result-card">
+                <div class="card-header">
+                    <h2><i class="fa-solid fa-bullseye"></i> Prediction Results</h2>
+                    <span id="modelBadge" class="model-tag">Logistic Regression</span>
+                </div>
+                <div class="card-body" id="resultContainer">
+                    <!-- Initial Placeholder State -->
+                    <div class="placeholder-state" id="placeholderState">
+                        <i class="fa-solid fa-clapperboard placeholder-icon"></i>
+                        <h3>Ready for Plot Analysis</h3>
+                        <p>Select a sample plot below or type your own summary to see predicted genres and confidence scores.</p>
+                    </div>
+
+                    <!-- Loading Spinner State -->
+                    <div class="loading-state hidden" id="loadingState">
+                        <div class="spinner"></div>
+                        <p>Vectorizing text & computing probability distribution...</p>
+                    </div>
+
+                    <!-- Output Results View -->
+                    <div class="output-content hidden" id="outputContent">
+                        <div class="top-genre-hero">
+                            <div class="top-genre-label">Primary Predicted Genre</div>
+                            <div class="top-genre-display">
+                                <span id="topGenreName" class="genre-badge-large">Sci-Fi</span>
+                                <span id="topGenreConfidence" class="confidence-pill">98.5%</span>
+                            </div>
+                        </div>
+
+                        <!-- Probability Distribution Progress Bars -->
+                        <div class="probability-section">
+                            <h3><i class="fa-solid fa-chart-bar"></i> Genre Probability Breakdown</h3>
+                            <div class="probability-bars" id="probBarsContainer">
+                                <!-- Dynamic Probability Bars inserted here -->
+                            </div>
+                        </div>
+
+                        <!-- TF-IDF Explainability Keywords -->
+                        <div class="explainability-section">
+                            <h3><i class="fa-solid fa-lightbulb"></i> Key Influential TF-IDF Terms</h3>
+                            <div class="tag-cloud" id="tagCloud">
+                                <!-- Dynamic keyword tags -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preset Sample Movie Plots -->
+        <section class="section" id="samples">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-film"></i> Test Preset Movie Plots</h2>
+                <p>Click any sample plot to load it directly into the classifier engine.</p>
+            </div>
+            <div class="samples-grid" id="samplesGrid">
+                <!-- Dynamically loaded samples -->
+            </div>
+        </section>
+
+        <!-- Model Benchmarks Section -->
+        <section class="section" id="benchmarks">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-chart-column"></i> Model Performance Benchmarks</h2>
+                <p>Comparative metrics evaluated on 5-fold cross validation and held-out test data.</p>
+            </div>
+            <div class="card benchmark-card">
+                <div class="table-responsive">
+                    <table class="benchmark-table">
+                        <thead>
+                            <tr>
+                                <th>Classifier Algorithm</th>
+                                <th>Test Accuracy</th>
+                                <th>Weighted F1-Score</th>
+                                <th>Precision</th>
+                                <th>Recall</th>
+                                <th>5-Fold CV Mean</th>
+                            </tr>
+                        </thead>
+                        <tbody id="benchmarkTableBody">
+                            <!-- Dynamic rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Top TF-IDF Keywords per Genre -->
+        <section class="section" id="keywords">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-tags"></i> Top Characteristic Words per Genre</h2>
+                <p>Strongest TF-IDF n-grams learned by the models for each movie genre category.</p>
+            </div>
+            <div class="genre-keywords-grid" id="genreKeywordsGrid">
+                <!-- Dynamic keyword cards -->
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>Built with Python, Scikit-Learn, NLTK, TF-IDF Vectorizer & Flask | Movie Genre Classification System</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
