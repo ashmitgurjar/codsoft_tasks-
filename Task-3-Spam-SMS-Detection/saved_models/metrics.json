@@ -1,0 +1,197 @@
+{
+  "models": {
+    "Naive Bayes": {
+      "accuracy": 0.9878,
+      "precision": 0.983,
+      "recall": 0.9251,
+      "f1_score": 0.9532,
+      "roc_auc": 0.9952,
+      "confusion_matrix": [
+        [
+          1203,
+          3
+        ],
+        [
+          14,
+          173
+        ]
+      ]
+    },
+    "Logistic Regression": {
+      "accuracy": 0.9734,
+      "precision": 0.9688,
+      "recall": 0.8289,
+      "f1_score": 0.8934,
+      "roc_auc": 0.9911,
+      "confusion_matrix": [
+        [
+          1201,
+          5
+        ],
+        [
+          32,
+          155
+        ]
+      ]
+    },
+    "Support Vector Machine": {
+      "accuracy": 0.9878,
+      "precision": 0.9722,
+      "recall": 0.9358,
+      "f1_score": 0.9537,
+      "roc_auc": 0.9925,
+      "confusion_matrix": [
+        [
+          1201,
+          5
+        ],
+        [
+          12,
+          175
+        ]
+      ]
+    },
+    "Random Forest": {
+      "accuracy": 0.9828,
+      "precision": 1.0,
+      "recall": 0.8717,
+      "f1_score": 0.9314,
+      "roc_auc": 0.9863,
+      "confusion_matrix": [
+        [
+          1206,
+          0
+        ],
+        [
+          24,
+          163
+        ]
+      ]
+    }
+  },
+  "top_spam_keywords": [
+    {
+      "word": "claim",
+      "weight": 5.949
+    },
+    {
+      "word": "prize",
+      "weight": 5.765
+    },
+    {
+      "word": "number_token cash",
+      "weight": 5.423
+    },
+    {
+      "word": "box number_token",
+      "weight": 5.404
+    },
+    {
+      "word": "number_token prize",
+      "weight": 5.404
+    },
+    {
+      "word": "guaranteed",
+      "weight": 5.295
+    },
+    {
+      "word": "ppm",
+      "weight": 5.223
+    },
+    {
+      "word": "claim number_token",
+      "weight": 5.217
+    },
+    {
+      "word": "number_token claim",
+      "weight": 5.201
+    },
+    {
+      "word": "number_token ppm",
+      "weight": 5.18
+    },
+    {
+      "word": "cs",
+      "weight": 5.151
+    },
+    {
+      "word": "tone",
+      "weight": 5.149
+    },
+    {
+      "word": "won number_token",
+      "weight": 5.109
+    },
+    {
+      "word": "pobox",
+      "weight": 5.098
+    },
+    {
+      "word": "pobox number_token",
+      "weight": 5.098
+    },
+    {
+      "word": "stop number_token",
+      "weight": 5.091
+    },
+    {
+      "word": "guaranteed number_token",
+      "weight": 5.09
+    },
+    {
+      "word": "landline",
+      "weight": 5.044
+    },
+    {
+      "word": "number_token url_link",
+      "weight": 5.034
+    },
+    {
+      "word": "ringtone",
+      "weight": 5.03
+    },
+    {
+      "word": "number_token msg",
+      "weight": 5.025
+    },
+    {
+      "word": "awarded",
+      "weight": 4.99
+    },
+    {
+      "word": "win number_token",
+      "weight": 4.986
+    },
+    {
+      "word": "cost number_token",
+      "weight": 4.949
+    },
+    {
+      "word": "nokia number_token",
+      "weight": 4.924
+    },
+    {
+      "word": "mobile number_token",
+      "weight": 4.922
+    },
+    {
+      "word": "free number_token",
+      "weight": 4.921
+    },
+    {
+      "word": "cash number_token",
+      "weight": 4.889
+    },
+    {
+      "word": "collection",
+      "weight": 4.825
+    },
+    {
+      "word": "send stop",
+      "weight": 4.747
+    }
+  ],
+  "total_samples": 5572,
+  "spam_count": 747,
+  "ham_count": 4825
+}

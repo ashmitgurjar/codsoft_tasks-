@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Spam SMS Detection & Analytics Platform</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header / Navbar -->
+        <header class="navbar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>SMS Guard <span>AI</span></h1>
+                    <p>Intelligent Spam & Phishing Detection System</p>
+                </div>
+            </div>
+            
+            <div class="nav-metrics-pill" id="quickMetricsPill">
+                <div class="pill-item">
+                    <span class="label">Top Model</span>
+                    <span class="value highlight" id="topModelName">Naive Bayes</span>
+                </div>
+                <div class="pill-divider"></div>
+                <div class="pill-item">
+                    <span class="label">Accuracy</span>
+                    <span class="value" id="topModelAcc">100.0%</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="main-layout">
+            <!-- Navigation Tabs -->
+            <nav class="tabs-nav">
+                <button class="tab-btn active" data-tab="tab-analyzer">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Real-time SMS Classifier
+                </button>
+                <button class="tab-btn" data-tab="tab-comparison">
+                    <i class="fa-solid fa-chart-column"></i> Model Comparison & Analytics
+                </button>
+                <button class="tab-btn" data-tab="tab-batch">
+                    <i class="fa-solid fa-file-csv"></i> Batch Dataset Classifier
+                </button>
+                <button class="tab-btn" data-tab="tab-keywords">
+                    <i class="fa-solid fa-tags"></i> Top Spam Indicators
+                </button>
+            </nav>
+
+            <!-- TAB 1: REAL-TIME SMS CLASSIFIER -->
+            <section id="tab-analyzer" class="tab-content active">
+                <div class="grid-2col">
+                    <!-- Left: Input Form -->
+                    <div class="glass-card">
+                        <div class="card-header">
+                            <h2><i class="fa-regular fa-comment-dots"></i> Message Analysis Engine</h2>
+                            <span class="badge badge-info">NLP + TF-IDF</span>
+                        </div>
+                        <div class="card-body">
+                            <!-- Model Selector -->
+                            <div class="form-group">
+                                <label for="modelSelect"><i class="fa-solid fa-microchip"></i> Select Classifier Algorithm:</label>
+                                <select id="modelSelect" class="custom-select">
+                                    <option value="Naive Bayes" selected>Multinomial Naive Bayes (Recommended)</option>
+                                    <option value="Logistic Regression">Logistic Regression (L2 Penalty)</option>
+                                    <option value="Support Vector Machine">Support Vector Machine (Linear SVM)</option>
+                                    <option value="Random Forest">Random Forest Classifier</option>
+                                </select>
+                            </div>
+
+                            <!-- Text Area -->
+                            <div class="form-group">
+                                <label for="smsInput"><i class="fa-solid fa-pen-to-square"></i> Enter or Paste SMS Message:</label>
+                                <textarea id="smsInput" placeholder="Type or paste your message here (e.g., 'URGENT! You have won $1,000 cash prize. Call 0800-123456 now!')..." rows="5"></textarea>
+                            </div>
+
+                            <div class="action-bar">
+                                <button id="classifyBtn" class="btn btn-primary">
+                                    <i class="fa-solid fa-paper-plane"></i> Classify Message
+                                </button>
+                                <button id="clearBtn" class="btn btn-secondary">
+                                    <i class="fa-solid fa-rotate-left"></i> Clear
+                                </button>
+                            </div>
+
+                            <!-- Sample Triggers -->
+                            <div class="samples-section">
+                                <p class="samples-label"><i class="fa-solid fa-bolt"></i> Try Quick Samples:</p>
+                                <div class="sample-chips">
+                                    <button class="chip chip-spam" data-sample="WINNER!! You have been selected for a £1000 cash reward! Call 09061701461 to claim your gift now. Code: TX99">
+                                        🚨 Lottery Spam
+                                    </button>
+                                    <button class="chip chip-spam" data-sample="FINAL NOTICE: Your bank account has been suspended due to suspicious logins. Verify now at http://secure-bank-login.com">
+                                        ⚠️ Phishing Bank
+                                    </button>
+                                    <button class="chip chip-ham" data-sample="Hey mom, I just arrived at the station. Can you pick me up in 10 minutes?">
+                                        💬 Family Chat
+                                    </button>
+                                    <button class="chip chip-ham" data-sample="Your OTP for login is 492018. Valid for 5 minutes. Do not share this code with anyone.">
+                                        🔐 Verification OTP
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Live Result Card -->
+                    <div class="glass-card result-card-empty" id="resultCard">
+                        <div class="card-header">
+                            <h2><i class="fa-solid fa-gauge-high"></i> Classification Results</h2>
+                            <span id="resultBadge" class="badge">Awaiting Input</span>
+                        </div>
+                        <div class="card-body" id="resultBody">
+                            <div class="placeholder-state">
+                                <i class="fa-solid fa-envelope-open-text placeholder-icon"></i>
+                                <p>Enter an SMS message on the left and click <strong>Classify Message</strong> to view real-time AI predictions, confidence breakdown, and spam keyword highlights.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: MODEL COMPARISON & ANALYTICS -->
+            <section id="tab-comparison" class="tab-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon icon-purple"><i class="fa-solid fa-brain"></i></div>
+                        <div class="stat-details">
+                            <h3>Total Classifiers</h3>
+                            <p class="stat-number">4 Models</p>
+                            <span class="stat-desc">NB, Logistic Reg, SVM, RF</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon icon-blue"><i class="fa-solid fa-database"></i></div>
+                        <div class="stat-details">
+                            <h3>Dataset Size</h3>
+                            <p class="stat-number" id="statDatasetSize">900 SMS</p>
+                            <span class="stat-desc">Balanced SMS Corpus</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon icon-green"><i class="fa-solid fa-check-double"></i></div>
+                        <div class="stat-details">
+                            <h3>Best F1-Score</h3>
+                            <p class="stat-number" id="statBestF1">100%</p>
+                            <span class="stat-desc">Optimal precision/recall</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon icon-amber"><i class="fa-solid fa-filter"></i></div>
+                        <div class="stat-details">
+                            <h3>Feature Extraction</h3>
+                            <p class="stat-number">TF-IDF</p>
+                            <span class="stat-desc">Unigram + Bigram N-Grams</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-2col margin-top-lg">
+                    <!-- Chart 1: Metrics Comparison -->
+                    <div class="glass-card">
+                        <div class="card-header">
+                            <h2><i class="fa-solid fa-chart-bar"></i> Performance Metrics Comparison</h2>
+                        </div>
+                        <div class="card-body chart-container">
+                            <canvas id="metricsChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Chart 2: Model Performance Table & Confusion Matrix -->
+                    <div class="glass-card">
+                        <div class="card-header">
+                            <h2><i class="fa-solid fa-table-cells"></i> Detailed Evaluation Metrics</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="custom-table" id="metricsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Model</th>
+                                            <th>Accuracy</th>
+                                            <th>Precision</th>
+                                            <th>Recall</th>
+                                            <th>F1-Score</th>
+                                            <th>ROC-AUC</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="metricsTableBody">
+                                        <!-- Loaded via JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="cm-section margin-top-md">
+                                <h3><i class="fa-solid fa-border-all"></i> Selected Confusion Matrix</h3>
+                                <div class="cm-grid" id="cmGrid">
+                                    <!-- Populated JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 3: BATCH DATASET CLASSIFIER -->
+            <section id="tab-batch" class="tab-content">
+                <div class="glass-card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-file-arrow-up"></i> Upload CSV or TXT File for Bulk Classification</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="drop-zone" id="dropZone">
+                            <i class="fa-solid fa-cloud-arrow-up drop-icon"></i>
+                            <p class="drop-title">Drag & Drop your SMS File here</p>
+                            <p class="drop-subtitle">Supports CSV (with text column) or TXT files (one message per line)</p>
+                            <input type="file" id="fileInput" accept=".csv,.txt" hidden>
+                            <button class="btn btn-secondary margin-top-sm" id="browseFileBtn">
+                                <i class="fa-solid fa-folder-open"></i> Browse File
+                            </button>
+                        </div>
+
+                        <div id="batchResults" class="batch-results-container hidden margin-top-lg">
+                            <div class="batch-summary-bar">
+                                <div class="batch-stat"><span class="label">Total Messages:</span> <strong id="batchTotal">0</strong></div>
+                                <div class="batch-stat text-danger"><span class="label">Spam Messages:</span> <strong id="batchSpam">0</strong></div>
+                                <div class="batch-stat text-success"><span class="label">Ham Messages:</span> <strong id="batchHam">0</strong></div>
+                                <div class="batch-stat"><span class="label">Spam Ratio:</span> <strong id="batchRatio">0%</strong></div>
+                            </div>
+
+                            <div class="table-responsive margin-top-md max-height-table">
+                                <table class="custom-table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>SMS Message Text</th>
+                                            <th>Predicted Class</th>
+                                            <th>Spam Probability</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="batchTableBody">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: TOP SPAM INDICATORS -->
+            <section id="tab-keywords" class="tab-content">
+                <div class="glass-card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-bullhorn"></i> Top 30 Spam-Trigger Words (TF-IDF Feature Weights)</h2>
+                        <span class="badge badge-warning">Explainable AI (XAI)</span>
+                    </div>
+                    <div class="card-body">
+                        <p class="section-desc">These keywords carry the highest logarithmic odds ratio for triggering spam predictions in Naive Bayes and Linear SVM models.</p>
+                        <div class="keyword-cloud" id="keywordCloud">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>SMS Guard AI &bull; Built with Python, Scikit-Learn (TF-IDF, Naive Bayes, SVM) & Flask</p>
+        </footer>
+    </div>
+
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
